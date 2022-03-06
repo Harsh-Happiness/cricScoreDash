@@ -4,7 +4,7 @@ import com.practice.model.Team;
 
 public interface DashboardService {
 
-    void showBattingStats(Team currentTeam);
+    void showBattingStats(Team currentTeam, int overs);
     void showBowlingStats(Team currentTeam);
 
     void showFinalScore(Team currentTeam);

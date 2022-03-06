@@ -9,6 +9,18 @@ public class BattingInfo {
 
     private double strikeRate;
 
+    public BattingInfo(String playerName) {
+        this.playerName = playerName;
+        this.runScored = 0;
+        this.ballsFaced = 0;
+        this.numOfSix = 0;
+        this.numOfFour = 0;
+        this.strikeRate = 0;
+    }
+
+    public BattingInfo() {
+    }
+
     public String getPlayerName() {
         return playerName;
     }

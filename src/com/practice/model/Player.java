@@ -12,6 +12,13 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
+        this.battingInfo = new BattingInfo(name);
+        this.bowlingInfo = new BowlingInfo(name);
+    }
+
+    public Player() {
+        this.battingInfo = new BattingInfo();
+        this.bowlingInfo = new BowlingInfo();
     }
 
     public boolean isOnstrike() {

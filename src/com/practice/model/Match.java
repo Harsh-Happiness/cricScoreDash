@@ -1,6 +1,8 @@
 package com.practice.model;
 
 
+import com.practice.enums.MatchStatus;
+
 public class Match {
     private String matchName;
     private Team teamOne;
@@ -13,6 +15,7 @@ public class Match {
     private Team prevBattingTeam;
 
     private Team winner;
+    private Enum matchStaus;
 
     public Match(String matchName, Team teamOne, Team teamTwo, int numOfPlayerInATeam, int numOfOverInMatch) {
         this.matchName = matchName;
@@ -20,6 +23,7 @@ public class Match {
         this.teamTwo = teamTwo;
         this.numOfPlayerInATeam = numOfPlayerInATeam;
         this.numOfOverInMatch = numOfOverInMatch;
+        this.matchStaus = MatchStatus.YET_TO_START;
     }
 
     public String getMatchName() {
@@ -84,6 +88,14 @@ public class Match {
 
     public void setWinner(Team winner) {
         this.winner = winner;
+    }
+
+    public Enum getMatchStaus() {
+        return matchStaus;
+    }
+
+    public void setMatchStaus(Enum matchStaus) {
+        this.matchStaus = matchStaus;
     }
 }
 

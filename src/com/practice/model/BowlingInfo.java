@@ -9,6 +9,18 @@ public class BowlingInfo {
     private int dotBalls;
     private double economy;
 
+    public BowlingInfo() {
+    }
+
+    public BowlingInfo(String playerName) {
+        this.playerName = playerName;
+        this.oversBowled = 0;
+        this.runsConceded = 0;
+        this.wicketTaken = 0;
+        this.maidenOvers = 0;
+        this.dotBalls = 0;
+        this.economy = 0;
+    }
 
     public String getPlayerName() {
         return playerName;

@@ -18,6 +18,8 @@ public class Database {
     public static Database getInstance(){
         if(database == null) {
             database = new Database();
+            teamMap = new HashMap<>();
+            matchMap = new HashMap<>();
         }
         return database;
     }

@@ -25,9 +25,9 @@ public class Team {
         this.teamScore = 0;
         this.teamWicket = 0;
 
-        this.strikeBatsman = null;
-        this.nonStrikeBatsman = null;
-        this.teamExtras = null;
+        this.strikeBatsman = new Player();
+        this.nonStrikeBatsman = new Player();
+        this.teamExtras = new Extra();
     }
 
     public void addNewPlayer(Player player){
