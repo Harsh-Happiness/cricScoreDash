@@ -32,26 +32,30 @@ public class MatchServiceImpl implements MatchService{
         }
     }
 
-    public void startMatch(String matchName, Team currentBattingTeam){
+    public void startMatch(String matchName, Team currentBattingTeam, Team currentBowlingTeam){
         Match currentMatch = database.matchMap.get(matchName);
         currentMatch.setMatchStaus(MatchStatus.IN_PROGRESS);
 
         currentMatch.setCurrentBattingTeam(currentBattingTeam);
+        currentMatch.setCurrentBowlingTeam(currentBowlingTeam);
         database.saveUpdatedMatch(matchName, currentMatch);
 
-        startBatting(currentMatch.getCurrentBattingTeam() , currentMatch);
+        startBatting(currentMatch.getCurrentBattingTeam() , currentMatch );
         switchTeam(currentBattingTeam, currentMatch);
         startBatting(currentMatch.getCurrentBattingTeam(), currentMatch);
 
-        displayResult(matchName);
+        dashboardService.showFinalScore(currentMatch);
     }
 
 
     private void startBatting(Team currentBattingTeam, Match currentMatch){
-        System.out.println("---------------------------------------------------------------");
+        System.out.println("===============================================================");
+        System.out.println("Match : "+ currentMatch.getMatchName());
         System.out.println("Current Batting team : " + currentBattingTeam.getTeamName());
         Scanner sc = new Scanner(System.in);
         teamService.initializeOpeners(currentBattingTeam);
+        teamService.initializeNewBowler(currentMatch.getCurrentBowlingTeam());
+        teamService.battingOrder(currentBattingTeam);
 
         for(int i = 1 ; i <= currentMatch.getNumOfOverInMatch(); i++ ){
             System.out.println("Playing Over # : "+ i);
@@ -59,10 +63,11 @@ public class MatchServiceImpl implements MatchService{
             for(Integer j = 0; j < 6; j++ ){
                 String score = sc.nextLine();
 
-                if(!updateScore(score, currentBattingTeam) || (currentMatch.getPrevBattingTeam() != null
-                        && currentMatch.getCurrentBattingTeam().getTeamScore() >= currentMatch.getPrevBattingTeam().getTeamScore())
+                if(!updateScore(score, currentBattingTeam, currentMatch.getCurrentBowlingTeam()) || (currentMatch.getPrevBattingTeam() != null
+                        && currentMatch.getCurrentBattingTeam().getTeamScore() > currentMatch.getPrevBattingTeam().getTeamScore())
                 ){
                     dashboardService.showBattingStats(currentBattingTeam, i);
+                    dashboardService.showBowlingStats(currentMatch.getCurrentBowlingTeam(), i);
                     currentMatch.setMatchStaus(MatchStatus.FINISHED);
                     return ;
                 }
@@ -73,13 +78,22 @@ public class MatchServiceImpl implements MatchService{
             }
 
             teamService.swapStrike(currentBattingTeam);
+
+            teamService.updateBowlerScore("O", currentMatch.getCurrentBowlingTeam());
+            teamService.initializeNewBowler(currentMatch.getCurrentBowlingTeam());
+
             dashboardService.showBattingStats(currentBattingTeam, i);
+            dashboardService.showBowlingStats(currentMatch.getCurrentBowlingTeam(), i);
+
+            System.out.println("===============================================================");
         }
         currentMatch.setMatchStaus(MatchStatus.FINISHED);
-//        dashboardService.showBowlingStats();
     }
 
-    private boolean updateScore(String score, Team currentBattingTeam){
+    private boolean updateScore(String score, Team currentBattingTeam, Team currentBowlingTeam){
+
+        teamService.updateBowlerScore(score, currentBowlingTeam);
+
         if(score.equals("W")){
            return teamService.updateWicket(currentBattingTeam);
 
@@ -100,9 +114,15 @@ public class MatchServiceImpl implements MatchService{
         if(currentBattingTeam == currentMatch.getTeamOne()){
             currentMatch.setCurrentBattingTeam(currentMatch.getTeamTwo());
             currentMatch.setPrevBattingTeam(currentMatch.getTeamOne());
+
+            currentMatch.setCurrentBowlingTeam(currentMatch.getTeamOne());
+            currentMatch.setPrevBowlingTeam(currentMatch.getTeamTwo());
         } else{
             currentMatch.setCurrentBattingTeam(currentMatch.getTeamOne());
             currentMatch.setPrevBattingTeam(currentMatch.getTeamTwo());
+
+            currentMatch.setCurrentBowlingTeam(currentMatch.getTeamTwo());
+            currentMatch.setPrevBowlingTeam(currentMatch.getTeamOne());
         }
 
         database.saveUpdatedMatch(currentMatch.getMatchName(), currentMatch);
@@ -114,7 +134,10 @@ public class MatchServiceImpl implements MatchService{
         Team currTeam = currentMatch.getCurrentBattingTeam();
         Team prevTeam = currentMatch.getPrevBattingTeam();
 
-        if(currTeam.getTeamScore() >= prevTeam.getTeamScore()){
+        if(currTeam.getTeamScore() == prevTeam.getTeamScore()){
+            System.out.println("Match is drawn.");
+
+        } else if(currTeam.getTeamScore() > prevTeam.getTeamScore()){
             currentMatch.setWinner(currTeam);
 
             int activeWickets = currTeam.getActivePlayers().size() + 2;

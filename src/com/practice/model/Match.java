@@ -14,6 +14,9 @@ public class Match {
     private Team currentBattingTeam;
     private Team prevBattingTeam;
 
+    private Team currentBowlingTeam;
+    private Team prevBowlingTeam;
+
     private Team winner;
     private Enum matchStaus;
 
@@ -96,6 +99,22 @@ public class Match {
 
     public void setMatchStaus(Enum matchStaus) {
         this.matchStaus = matchStaus;
+    }
+
+    public Team getCurrentBowlingTeam() {
+        return currentBowlingTeam;
+    }
+
+    public void setCurrentBowlingTeam(Team currentBowlingTeam) {
+        this.currentBowlingTeam = currentBowlingTeam;
+    }
+
+    public Team getPrevBowlingTeam() {
+        return prevBowlingTeam;
+    }
+
+    public void setPrevBowlingTeam(Team prevBowlingTeam) {
+        this.prevBowlingTeam = prevBowlingTeam;
     }
 }
 

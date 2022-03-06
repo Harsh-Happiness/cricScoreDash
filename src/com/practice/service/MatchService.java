@@ -8,7 +8,7 @@ public interface MatchService {
 
     void addPlayersInTeam(String match1, Team team, List<String> playersList);
 
-    void startMatch(String matchName, Team currentBattingTeam);
+    void startMatch(String matchName, Team currentBattingTeam, Team currentBowlingTeam);
 
     void displayResult(String currentMatchName);
 }

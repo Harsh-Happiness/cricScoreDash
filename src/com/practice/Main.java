@@ -13,7 +13,6 @@ import java.util.Scanner;
 public class  Main {
 
     public static void main(String[] args) {
-	// write your code here
         Database database = Database.getInstance();
         MatchServiceImpl matchService = new MatchServiceImpl();
 
@@ -29,15 +28,37 @@ public class  Main {
         database.teamMap.put("India", India);
         database.teamMap.put("England", England);
 
-        Match match1 = new Match("Border-Gavaskar-2022-1",India, England, numOfPlayers, numOfOvers);
-        database.matchMap.put("Border-Gavaskar-2022-1", match1);
+        Match match1 = new Match("Artherton-Gavaskar-2022-1",India, England, numOfPlayers, numOfOvers);
+        database.matchMap.put("Artherton-Gavaskar-2022-1", match1);
 
-        List<String> playersList = new ArrayList<>();
+        List<String> playersList1 = new ArrayList<>();
+        List<String> playersList2 = new ArrayList<>();
         for(int i = 1 ; i <= numOfPlayers; i++ ){
-            playersList.add(new String("P"+String.valueOf(i)));
+            playersList1.add(new String("P"+String.valueOf(i)));
+            playersList2.add(new String("P"+String.valueOf(numOfPlayers + i)));
         }
-        matchService.addPlayersInTeam(match1.getMatchName(), India, playersList);
-        matchService.addPlayersInTeam(match1.getMatchName(), England, playersList);
-        matchService.startMatch(match1.getMatchName(), India);
+        matchService.addPlayersInTeam(match1.getMatchName(), India, playersList1);
+        matchService.addPlayersInTeam(match1.getMatchName(), England, playersList2);
+        matchService.startMatch(match1.getMatchName(), India, England);
+
+/*
+--------------------------------------------------------------------------------------------------------------------------
+ */
+/*
+        Team RSA = new Team("RSA");
+        Team Australia = new Team("Australia");
+        database.teamMap.put("RSA", RSA);
+        database.teamMap.put("Australia", Australia);
+
+        Match match2 = new Match("Pollock-Border-2022-2",RSA, Australia, numOfPlayers, numOfOvers);
+        database.matchMap.put("Pollock-Border-2022-2", match2);
+
+        matchService.addPlayersInTeam(match2.getMatchName(), RSA, playersList1);
+        matchService.addPlayersInTeam(match2.getMatchName(), Australia, playersList2);
+        matchService.startMatch(match2.getMatchName(), RSA, Australia);
+
+ */
+
     }
+
 }

@@ -2,13 +2,17 @@ package com.practice.model;
 
 public class BowlingInfo {
     private String playerName;
-    private int oversBowled;
+
     private int runsConceded;
     private int wicketTaken;
-    private int maidenOvers;
     private int dotBalls;
-    private double economy;
 
+    private int maidenOvers;
+
+    private double economy;
+    private int oversBowled;
+
+    //TODO : over can become object and composed here
     public BowlingInfo() {
     }
 

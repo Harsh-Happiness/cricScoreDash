@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Database {
+    //can segregate the maps in separate class as well
     public static Map<String, Match> matchMap;
     public static Map<String, Team> teamMap;
 

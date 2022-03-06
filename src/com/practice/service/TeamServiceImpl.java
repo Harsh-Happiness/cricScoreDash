@@ -1,5 +1,6 @@
 package com.practice.service;
 
+import com.practice.model.BowlingInfo;
 import com.practice.model.Extra;
 import com.practice.model.Player;
 import com.practice.model.Team;
@@ -14,6 +15,7 @@ public class TeamServiceImpl implements TeamService{
         playerService = new PlayerServiceImpl();
     }
 
+    @Override
     public Team addNewPlayer(Team currentTeam, Player player){
         if(currentTeam.getPlayers().contains(player)){
             System.out.println("Player is already in the team.");
@@ -25,6 +27,7 @@ public class TeamServiceImpl implements TeamService{
         return currentTeam;
     }
 
+    @Override
     public void initializeOpeners(Team currentBattingTeam){
 
         if(currentBattingTeam.getActivePlayers().size() >= 2){
@@ -35,6 +38,14 @@ public class TeamServiceImpl implements TeamService{
         }
 
         database.saveUpdatedTeamStatus(currentBattingTeam.getTeamName(),currentBattingTeam);
+    }
+
+    @Override
+    public void battingOrder(Team currentBattingTeam) {
+        System.out.println("Batting order for team : " + currentBattingTeam.getTeamName());
+        for(Player player : currentBattingTeam.getPlayers()){
+            System.out.println(player.getName());
+        }
     }
 
     @Override
@@ -59,6 +70,7 @@ public class TeamServiceImpl implements TeamService{
         database.saveUpdatedTeamStatus(currentBattingTeam.getTeamName(), currentBattingTeam);
     }
 
+    @Override
     public void updateScore(int score , Team team){
         Player updatePlayerStats = updatePlayerStats(score, false, team);
         team.setStrikeBatsman(updatePlayerStats);
@@ -73,6 +85,7 @@ public class TeamServiceImpl implements TeamService{
             swapStrike(team);
     }
 
+    @Override
     public void swapStrike(Team team){
         Player strikeBatsman = team.getStrikeBatsman();
         team.setStrikeBatsman(team.getNonStrikeBatsman());
@@ -80,15 +93,16 @@ public class TeamServiceImpl implements TeamService{
 
     }
 
-    public boolean updateWicket(Team team){
-        team.setTeamWicket(team.getTeamWicket()+1);
+    @Override
+    public boolean updateWicket(Team currentBattingTeam){
+        currentBattingTeam.setTeamWicket(currentBattingTeam.getTeamWicket()+1);
 
-        if(hasAvailablePlayers(team)){
-            Player updatedBatsmanScore = updatePlayerStats(0, true,  team);
-            team.setStrikeBatsman(updatedBatsmanScore);
+        if(hasAvailablePlayers(currentBattingTeam)){
+            Player updatedBatsmanScore = updatePlayerStats(0, true, currentBattingTeam);
+            currentBattingTeam.setStrikeBatsman(updatedBatsmanScore);
 
-            updateTeamScore(0, team);
-            updateFallenWicket(team);
+            updateTeamScore(0, currentBattingTeam);
+            updateFallenWicket(currentBattingTeam);
 
             return true;
         } else{
@@ -97,7 +111,31 @@ public class TeamServiceImpl implements TeamService{
         }
     }
 
-    private Player updatePlayerStats(int run ,boolean isWicket, Team team){
+    @Override
+    public void initializeNewBowler(Team team){
+        int size = team.getPlayers().size();
+        Player newBowler = new Player();
+
+        do{
+            newBowler = team.getPlayers().get((int) (Math.random() * size));
+        } while(team.getCurrentBowler().equals(newBowler));
+
+
+        team.setCurrentBowler(newBowler);
+        database.saveUpdatedTeamStatus(team.getTeamName(), team);
+    }
+
+    @Override
+    public void updateBowlerScore(String score, Team currentBowlingTeam) {
+        Player currentBowler = currentBowlingTeam.getCurrentBowler();
+
+        Player player = playerService.updatePlayerBowlingScore(score, currentBowlingTeam, currentBowler);
+        currentBowlingTeam.setCurrentBowler(player);
+
+        database.saveUpdatedTeamStatus(currentBowlingTeam.getTeamName(), currentBowlingTeam);
+    }
+
+    private Player updatePlayerStats(int run , boolean isWicket, Team team){
         Player strikeBatsman = team.getStrikeBatsman();
 
         if(isWicket) {

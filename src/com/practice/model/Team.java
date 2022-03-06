@@ -16,6 +16,7 @@ public class Team {
     private Player strikeBatsman;
     private Player nonStrikeBatsman;
 
+    private Player currentBowler;
     private Extra teamExtras;
 
     public Team(String teamName) {
@@ -27,17 +28,18 @@ public class Team {
 
         this.strikeBatsman = new Player();
         this.nonStrikeBatsman = new Player();
+        this.currentBowler = new Player();
         this.teamExtras = new Extra();
     }
 
-    public void addNewPlayer(Player player){
-        if(this.players.contains(player)){
-            System.out.println("Player is already in the team.");
-        } else {
-            this.players.add(player);
-            this.activePlayers.add(player);
-        }
-    }
+//    public void addNewPlayer(Player player){
+//        if(this.players.contains(player)){
+//            System.out.println("Player is already in the team.");
+//        } else {
+//            this.players.add(player);
+//            this.activePlayers.add(player);
+//        }
+//    }
 
     public String getTeamName() {
         return teamName;
@@ -101,5 +103,13 @@ public class Team {
 
     public void setTeamExtras(Extra teamExtras) {
         this.teamExtras = teamExtras;
+    }
+
+    public Player getCurrentBowler() {
+        return currentBowler;
+    }
+
+    public void setCurrentBowler(Player currentBowler) {
+        this.currentBowler = currentBowler;
     }
 }
